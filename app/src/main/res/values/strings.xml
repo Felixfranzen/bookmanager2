@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">BookManager2</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <string name="title_title">Title: </string>
+    <string name="title_author">Author: </string>
+    <string name="title_course">Course: </string>
+    <string name="title_price">Price: </string>
+    <string name="title_isbn">ISBN: </string>
+
+    <string name="title_sum">Total Cost:</string>
+    <string name="title_expensive">Most Expensive:</string>
+    <string name="title_cheapest">Least Expensive:</string>
+    <string name="title_average">Average Price:</string>
+
+    <string name="page_title_collection">Collection</string>
+    <string name="page_title_summary">Summary</string>
+
+    <string name="activity_header_add">Add a book</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
