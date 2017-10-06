@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements CollectionFragmen
     }
 
 
-    public static class PageFragmentFactory {
+    private static class PageFragmentFactory {
         public PageFragmentFactory(){}
 
         public static Fragment getPage(int position){

@@ -3,6 +3,7 @@ package bookmanager.chalmers.edu.bookmanager2;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,6 +62,23 @@ public class AddBookActivity extends AppCompatActivity {
             Toast.makeText(this, "You need to enter a title", Toast.LENGTH_SHORT).show();
         }
 
-        //TODO: Save data
+        try {
+            Integer.parseInt(price.getText().toString());
+        } catch(NumberFormatException e) {
+            Toast.makeText(this, "Price needs to be a number", Toast.LENGTH_SHORT).show();
+            return;
+        } catch(NullPointerException e) {
+            Toast.makeText(this, "Price needs to be a number", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Book newBook = SimpleBookManager.getInstance().createBook();
+        newBook.setAuthor(author.getText().toString());
+        newBook.setCourse(course.getText().toString());
+        newBook.setIsbn(isbn.getText().toString());
+        newBook.setPrice(Integer.parseInt(price.getText().toString()));
+        newBook.setTitle(title.getText().toString());
+
+        finish();
     }
 }

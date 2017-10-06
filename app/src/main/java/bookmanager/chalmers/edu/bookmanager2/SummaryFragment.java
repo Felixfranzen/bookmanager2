@@ -27,11 +27,15 @@ public class SummaryFragment extends Fragment {
         leastExpensiveView = (TextView) view.findViewById(R.id.least_expensive);
         averagePriceView = (TextView) view.findViewById(R.id.average_price);
 
-        BookManager bm = SimpleBookManager.getInstance();
-        setTexts(bm.count(), bm.getTotalCost(), bm.getMaxPrice(), bm.getMinPrice(), bm.getMeanPrice());
-
         return view;
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        BookManager bm = SimpleBookManager.getInstance();
+        setTexts(bm.count(), bm.getTotalCost(), bm.getMaxPrice(), bm.getMinPrice(), bm.getMeanPrice());
     }
 
     private void setTexts (int count, int sum, int mostExpensive, int leastExpensive, float averagePrice){
