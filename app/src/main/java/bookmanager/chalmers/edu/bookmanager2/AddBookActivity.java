@@ -72,7 +72,7 @@ public class AddBookActivity extends AppCompatActivity {
             return;
         }
 
-        Book newBook = SimpleBookManager.getInstance().createBook();
+        Book newBook = SimpleBookManager.getBookManager().createBook();
         newBook.setAuthor(author.getText().toString());
         newBook.setCourse(course.getText().toString());
         newBook.setIsbn(isbn.getText().toString());

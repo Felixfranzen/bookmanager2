@@ -58,8 +58,7 @@ public class MainActivity extends AppCompatActivity implements CollectionFragmen
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        BookManager bm = SimpleBookManager.getInstance();
-        bm.createBook();
+        BookManager bm = SimpleBookManager.getBookManager();
     }
 
 

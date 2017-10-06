@@ -34,7 +34,7 @@ public class SummaryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        BookManager bm = SimpleBookManager.getInstance();
+        BookManager bm = SimpleBookManager.getBookManager();
         setTexts(bm.count(), bm.getTotalCost(), bm.getMaxPrice(), bm.getMinPrice(), bm.getMeanPrice());
     }
 

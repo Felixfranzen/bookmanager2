@@ -1,5 +1,7 @@
 package bookmanager.chalmers.edu.bookmanager2;
 
+import android.content.SharedPreferences;
+
 import java.util.ArrayList;
 
 /**
@@ -17,5 +19,6 @@ public interface BookManager {
     public int getMaxPrice();
     public float getMeanPrice();
     public int getTotalCost();
-    public void saveChanges();
+    public void saveChanges(SharedPreferences prefs);
+    public void loadBooks(SharedPreferences prefs);
 }

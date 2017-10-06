@@ -1,7 +1,12 @@
 package bookmanager.chalmers.edu.bookmanager2;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -11,22 +16,13 @@ import java.util.ArrayList;
 public class SimpleBookManager implements BookManager {
 
     private ArrayList<Book> books = new ArrayList<Book>();
+
     private static final BookManager instance = new SimpleBookManager();
 
     private SimpleBookManager(){
-        for (int i = 0; i < 5; i++) {
-            String author = "Author" + i;
-            String title = "Title" + i;
-            int price = i * 100;
-            String isbn = String.valueOf(i * 1111);
-            String course = "Course" + i;
-
-            Book book = new Book(author, title, price, isbn, course);
-            books.add(book);
-        }
     }
 
-    public static BookManager getInstance(){
+    public static BookManager getBookManager(){
         return instance;
     }
 
@@ -108,7 +104,22 @@ public class SimpleBookManager implements BookManager {
         return sum;
     }
 
-    public void saveChanges() {
+    public void saveChanges(SharedPreferences prefs) {
+        Gson gson = new Gson();
+        SharedPreferences.Editor prefsEditor = prefs.edit();
 
+        String jsonText = gson.toJson(books);
+        prefsEditor.putString("books", jsonText);
+        prefsEditor.commit();
+
+        Log.i("SAVED BOOKS: ", prefs.getString("books", null));
+    }
+
+    public void loadBooks(SharedPreferences prefs){
+        Gson gson = new Gson();
+        String jsonText = prefs.getString("books", null);
+        ArrayList<Book> loadedBooks = gson.fromJson(jsonText, new TypeToken<ArrayList<Book>>(){}.getType());
+        books = loadedBooks;
+        Log.i("LOADED BOOKS: ", books.toString());
     }
 }
