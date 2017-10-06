@@ -78,7 +78,8 @@ public class AddBookActivity extends AppCompatActivity {
         newBook.setIsbn(isbn.getText().toString());
         newBook.setPrice(Integer.parseInt(price.getText().toString()));
         newBook.setTitle(title.getText().toString());
-
+        SimpleBookManager.getBookManager().saveChanges(getSharedPreferences("books", MODE_PRIVATE));
+        Log.i("ALL BOOKS: ", SimpleBookManager.getBookManager().getAllBooks().toString());
         finish();
     }
 }

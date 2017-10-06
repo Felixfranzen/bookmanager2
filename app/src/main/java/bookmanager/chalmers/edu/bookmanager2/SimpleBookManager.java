@@ -105,6 +105,7 @@ public class SimpleBookManager implements BookManager {
     }
 
     public void saveChanges(SharedPreferences prefs) {
+        Log.i("SAVE CHANGES", "SAVE CHANGES");
         Gson gson = new Gson();
         SharedPreferences.Editor prefsEditor = prefs.edit();
 
@@ -117,9 +118,8 @@ public class SimpleBookManager implements BookManager {
 
     public void loadBooks(SharedPreferences prefs){
         Gson gson = new Gson();
-        String jsonText = prefs.getString("books", null);
+        String jsonText = prefs.getString("books", "");
         ArrayList<Book> loadedBooks = gson.fromJson(jsonText, new TypeToken<ArrayList<Book>>(){}.getType());
         books = loadedBooks;
-        Log.i("LOADED BOOKS: ", books.toString());
     }
 }

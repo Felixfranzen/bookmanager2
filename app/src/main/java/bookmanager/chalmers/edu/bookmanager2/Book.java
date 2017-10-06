@@ -67,7 +67,7 @@ public class Book {
     }
 
     public String toString(){
-        String print = author + title + String.valueOf(price) + isbn + course;
+        String print = author  + ", " + title;
         return print;
     }
 }
