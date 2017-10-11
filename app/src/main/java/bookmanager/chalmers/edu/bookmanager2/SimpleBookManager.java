@@ -65,6 +65,10 @@ public class SimpleBookManager implements BookManager {
         books.add(to, books.remove(from));
     }
     public int getMinPrice() {
+        if (count() == 0){
+            return 0;
+        }
+
         int minPrice = getBook(0).getPrice();
         for (Book book : books) {
             int price = book.getPrice();
@@ -77,6 +81,10 @@ public class SimpleBookManager implements BookManager {
     }
 
     public int getMaxPrice() {
+        if (count() == 0){
+            return 0;
+        }
+
         int maxPrice = getBook(0).getPrice();
         for (Book book : books) {
             int price = book.getPrice();
@@ -118,7 +126,7 @@ public class SimpleBookManager implements BookManager {
 
     public void loadBooks(SharedPreferences prefs){
         Gson gson = new Gson();
-        String jsonText = prefs.getString("books", "");
+        String jsonText = prefs.getString("books", "[]");
         ArrayList<Book> loadedBooks = gson.fromJson(jsonText, new TypeToken<ArrayList<Book>>(){}.getType());
         books = loadedBooks;
     }
