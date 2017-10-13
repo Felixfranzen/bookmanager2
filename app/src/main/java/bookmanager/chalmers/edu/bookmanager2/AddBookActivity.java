@@ -18,6 +18,9 @@ public class AddBookActivity extends AppCompatActivity {
     private EditText isbn;
     private EditText price;
 
+    private int editIndex;
+    private boolean hasBook;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +35,15 @@ public class AddBookActivity extends AppCompatActivity {
         course = (EditText) findViewById(R.id.add_course);
         isbn = (EditText) findViewById(R.id.add_isbn);
         price = (EditText) findViewById(R.id.add_price);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            editIndex = extras.getInt("INDEX");
+            hasBook = true;
+
+            Book editableBook = SimpleBookManager.getBookManager().getBook(editIndex);
+            setFields(editableBook);
+        }
     }
 
     @Override
@@ -57,29 +69,51 @@ public class AddBookActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void setFields(Book book){
+        title.setText(book.getTitle().toString());
+        author.setText(book.getAuthor().toString());
+        course.setText(book.getAuthor().toString());
+        isbn.setText(book.getIsbn().toString());
+        price.setText(String.valueOf(book.getPrice()));
+    }
+
     private void onSaveClicked(){
         if (title.getText().length() == 0){
             Toast.makeText(this, "You need to enter a title", Toast.LENGTH_SHORT).show();
         }
 
-        try {
-            Integer.parseInt(price.getText().toString());
-        } catch(NumberFormatException e) {
-            Toast.makeText(this, "Price needs to be a number", Toast.LENGTH_SHORT).show();
-            return;
-        } catch(NullPointerException e) {
-            Toast.makeText(this, "Price needs to be a number", Toast.LENGTH_SHORT).show();
+        Book newBook;
+        if (hasBook){
+            newBook = SimpleBookManager.getBookManager().getBook(editIndex);
+        } else {
+            newBook = SimpleBookManager.getBookManager().createBook();
+        }
+
+        if (newBook == null){
             return;
         }
 
-        Book newBook = SimpleBookManager.getBookManager().createBook();
+        int bookPrice;
+        if (price.getText().toString().length() == 0){
+            bookPrice = 0;
+        } else {
+            try {
+                bookPrice = Integer.parseInt(price.getText().toString());
+            } catch(NumberFormatException e) {
+                Toast.makeText(this, "Price needs to be a number", Toast.LENGTH_SHORT).show();
+                return;
+            } catch(NullPointerException e) {
+                Toast.makeText(this, "Price needs to be a number", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
         newBook.setAuthor(author.getText().toString());
         newBook.setCourse(course.getText().toString());
         newBook.setIsbn(isbn.getText().toString());
-        newBook.setPrice(Integer.parseInt(price.getText().toString()));
+        newBook.setPrice(bookPrice);
         newBook.setTitle(title.getText().toString());
         SimpleBookManager.getBookManager().saveChanges(getSharedPreferences("books", MODE_PRIVATE));
-        Log.i("ALL BOOKS: ", SimpleBookManager.getBookManager().getAllBooks().toString());
         finish();
     }
 }

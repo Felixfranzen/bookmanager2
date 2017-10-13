@@ -1,5 +1,6 @@
 package bookmanager.chalmers.edu.bookmanager2;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +18,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView isbnView;
 
     private Book book;
+    private int bookIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +31,19 @@ public class DetailActivity extends AppCompatActivity {
         priceView = (TextView) findViewById(R.id.book_price);
         isbnView = (TextView) findViewById(R.id.book_isbn);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            book = SimpleBookManager.getBookManager().getBook(extras.getInt("INDEX"));
-            setTitles(book);
-        }
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            bookIndex = extras.getInt("INDEX");
+            book = SimpleBookManager.getBookManager().getBook(bookIndex);
+            setTitles(book);
+        }
     }
 
     @Override
@@ -55,7 +62,9 @@ public class DetailActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_edit) {
-
+            Intent intent = new Intent(this, AddBookActivity.class);
+            intent.putExtra("INDEX", bookIndex);
+            startActivity(intent);
             return true;
         } else if (id == R.id.action_remove){
             SimpleBookManager.getBookManager().removeBook(book);
