@@ -23,6 +23,12 @@ public class DetailActivity extends AppCompatActivity {
         courseView = (TextView) findViewById(R.id.book_course);
         priceView = (TextView) findViewById(R.id.book_price);
         isbnView = (TextView) findViewById(R.id.book_isbn);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            int index = extras.getInt("INDEX");
+            setTitles(SimpleBookManager.getBookManager().getBook(index));
+        }
     }
 
     private void setTitles(Book book) {

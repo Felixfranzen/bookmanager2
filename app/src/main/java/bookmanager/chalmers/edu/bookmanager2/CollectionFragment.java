@@ -1,9 +1,12 @@
 package bookmanager.chalmers.edu.bookmanager2;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +14,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -54,18 +60,21 @@ public class CollectionFragment extends Fragment {
 
     @Override
     public void onResume() {
-        Log.i("COLLECTIONFRAG ONRESUME", "COLLECTIONFRAG ONRESUME");
         super.onResume();
 
-        ArrayList<Book> books = SimpleBookManager.getBookManager().getAllBooks();
-        ArrayAdapter<Book> itemsAdapter = new ArrayAdapter<Book>(getActivity(), android.R.layout.simple_list_item_1, books);
-        ListView list = (ListView) view.findViewById(R.id.book_list);
+        final ArrayList<Book> books = SimpleBookManager.getBookManager().getAllBooks();
+        BookAdapter itemsAdapter = new BookAdapter(getActivity(), books);
+        RecyclerView list = (RecyclerView) view.findViewById(R.id.book_list);
         list.setAdapter(itemsAdapter);
+        list.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        itemsAdapter.setOnItemClickedListener(new OnItemClickListener() {
+
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("ITEM CLICKED: ", Integer.toString(position));
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra("INDEX", position);
+                startActivity(intent);
             }
         });
     }
@@ -100,5 +109,90 @@ public class CollectionFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View itemView, int position);
+    }
+
+
+    public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
+
+        private Context mContext;
+        private List<Book> mBooks;
+        private OnItemClickListener listener;
+
+        public void setOnItemClickedListener(OnItemClickListener list){
+            listener = list;
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+
+            public TextView title;
+            public TextView author;
+
+            public ViewHolder(final View itemView) {
+                super(itemView);
+
+                title = (TextView) itemView.findViewById(R.id.book_item_title);
+                author = (TextView) itemView.findViewById(R.id.book_item_author);
+
+                // Setup the click listener
+                itemView.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        // Triggers click upwards to the adapter on click
+                        if (listener != null) {
+                            int position = getAdapterPosition();
+                            if (position != RecyclerView.NO_POSITION) {
+                                listener.onItemClick(itemView, position);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        public BookAdapter(Context context, List<Book> books){
+            mBooks = books;
+            mContext = context;
+        }
+
+        public Context getContext() {
+            return mContext;
+        }
+
+        @Override
+        public BookAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            Context context = parent.getContext();
+            LayoutInflater inflater = LayoutInflater.from(context);
+
+            // Inflate the custom layout
+            View bookView = inflater.inflate(R.layout.book_item, parent, false);
+
+            // Return a new holder instance
+            ViewHolder viewHolder = new ViewHolder(bookView);
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(BookAdapter.ViewHolder viewHolder, int position) {
+            // Get the data model based on position
+            Book book = mBooks.get(position);
+            // Set item views based on your views and data model
+            TextView titleView = viewHolder.title;
+            TextView authorView = viewHolder.author;
+            titleView.setText(book.getTitle());
+            authorView.setText(book.getAuthor());
+        }
+
+        // Returns the total count of items in the list
+        @Override
+        public int getItemCount() {
+            return mBooks.size();
+        }
+
+
     }
 }
